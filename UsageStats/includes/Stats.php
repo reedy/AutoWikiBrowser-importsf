@@ -276,7 +276,7 @@ development tasks. They are <i>indicative only</i> - for example, we don't curre
 their username or switching to a different wiki mid-session.</p>
 <div><small>
 <sup><a name="1">1</a></sup>Unique username/wiki/language code<br/>
-<sup><a name="2">2</a></sup>Only sites at which AWB has logged 50 or more saves are shown<br/>
+<sup><a name="2">2</a></sup>Only sites at which AWB has logged 500 or more saves are shown<br/>
 <sup><a name="3">3</a></sup>Anonymous (usernames are not revealed)
 </small>
 <br/></div>
