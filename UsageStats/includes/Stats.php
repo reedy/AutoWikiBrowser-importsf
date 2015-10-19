@@ -36,7 +36,7 @@ Some queries we might want on a stats page:
 // Return a web page showing stats:
 function htmlstats(){
 	global $db;
-
+	
 	?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
@@ -50,36 +50,36 @@ function htmlstats(){
 			font-family : Arial, Courier, Helvetica;
 			color : Black;
 		}
-
+		
 		a:link  {
 			color : blue;
 			text-decoration : none;
 		}
-
+		
 		A:visited {
 			color : purple;
 			text-decoration : none;
 		}
-
+		
 		a:hover  {
 			color : #D79C02;
 			text-decoration : underline;
 		}
-
+		
 		table, caption {
 			width : 700px;
 		}
-
+		
 		table, caption, th, td {
 			border-width : 1px;
-			border-style : solid;
+			border-style : solid;		
 		}
-
+		
 		caption {
 			border-bottom-width : 0px;
 			font-weight : bold;
 		}
-
+		
 		TH.sortable {
 			cursor : pointer;
 		}
@@ -94,7 +94,7 @@ function htmlstats(){
 <table>
 	<caption>Overview</caption>
 <?php
-
+	
 	//Number of sessions, Number of saves,
 	$row = $db->no_of_sessions_and_saves();
 	PrintTableRow('Number of Sessions', FormatNumber($row['nosessions']));
@@ -111,10 +111,10 @@ function htmlstats(){
 	//Unique users count (username/wiki)
 	$row = $db->unique_username_count();
 	PrintTableRowNoHeaderEncoding('Number of Unique Users<sup><a href="#1">1</a></sup>', FormatNumber($row['UniqueUsersCount']));
-
+	
 	$row = $db->language_count();
 	PrintTableRow('Number of Unique Languages', FormatNumber($row['langcount']));
-
+	
 	//Number of plugins known
 	$row = $db->plugin_count();
 	PrintTableRow('Number of Plugins Known', FormatNumber($row['Plugins']));
@@ -145,8 +145,10 @@ function htmlstats(){
 ';
 
 	$result = $db->sites();
-	foreach($result as $row) {
-		$site=BuildWikiHostname($row['LangCode'], $row['Site']);
+	
+	while($row = $result->fetch_assoc())
+	{
+		$site=BuildWikiHostname($row['LangCode'], $row['Site']);		
 		echo '
 
 	<tr>
@@ -157,11 +159,13 @@ function htmlstats(){
 	</tr>
 ';
 	}
-
+		  
+	$result->close();
+			
 	//OS Stats
 	OS_XHTML($db->OSs(), '');
 	OS_XHTML($db->OSs(true), ' (last 30 days)');
-
+	
 	//Number of saves by language (culture)
 	echo '
 
@@ -178,8 +182,8 @@ function htmlstats(){
 </thead>
 ';
 	$result = $db->cultures();
-
-	foreach($result as $row) {
+	
+	while($row = $result->fetch_assoc()) {
 		  echo '
 
 	<tr>
@@ -189,7 +193,9 @@ function htmlstats(){
 	</tr>
 ';
 	}
-
+	
+	$result->close();
+	
 	//User with the most saves
 	$row = $db->busiest_user();
 	$site=BuildWikiHostname($row['LangCode'], $row['Site']);
@@ -229,8 +235,8 @@ function htmlstats(){
 ';
 
 	$result = $db->plugins();
-
-	foreach($result as $row) {
+	
+	while ($row = $result->fetch_assoc()) {
 		$plugintype=PluginType($row['PluginType']);
 		echo '
 	<tr>
@@ -239,7 +245,9 @@ function htmlstats(){
 	</tr>
 ';
 	}
-
+	
+	$result->close();
+	
 ?>
 </table>
 <p/>
@@ -247,7 +255,7 @@ function htmlstats(){
 	<caption><a name="Diagnostics"></a>Diagnostics</caption>
 	<tr>
 		<th align="left" scope="row">Script version</th><td><?php echo MAJOR.'.'.MINOR; ?></td>
-	</tr>
+	</tr>	
 <?php
 
 	// Script errors
@@ -255,7 +263,7 @@ function htmlstats(){
 	PrintTableRow('Submission errors', $row['Errors']);
 	$row = $db->errors_fixed();
 	PrintTableRow('Submission errors (not fixed)', $row['Errors']);
-
+	
 	// Username not recorded
 	$row = $db->missing_usernames_count();
 	PrintTableRow('Number of sessions where username not recorded', $row['MissingUsernames']);
@@ -301,7 +309,8 @@ function OS_XHTML($result, $headersuffix) {
 </thead>
 ';
 
-	foreach($result as $row) {
+	while($row = $result->fetch_assoc())
+	{
 		echo '
 
 	<tr>
@@ -311,6 +320,8 @@ function OS_XHTML($result, $headersuffix) {
 	</tr>
 ';
 	}
+	
+	$result->close();
 }
 
 function BuildWikiHostname($lang, $site) {
