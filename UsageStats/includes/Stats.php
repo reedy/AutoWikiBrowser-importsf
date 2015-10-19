@@ -145,8 +145,8 @@ function htmlstats(){
 ';
 
 	$result = $db->sites();
-	
-	while($row = $result->fetch_assoc())
+
+	foreach($result as $row) {
 	{
 		$site=BuildWikiHostname($row['LangCode'], $row['Site']);		
 		echo '
@@ -159,8 +159,6 @@ function htmlstats(){
 	</tr>
 ';
 	}
-		  
-	$result->close();
 			
 	//OS Stats
 	OS_XHTML($db->OSs(), '');
@@ -182,8 +180,8 @@ function htmlstats(){
 </thead>
 ';
 	$result = $db->cultures();
-	
-	while($row = $result->fetch_assoc()) {
+
+	foreach($result as $row) {
 		  echo '
 
 	<tr>
@@ -193,8 +191,6 @@ function htmlstats(){
 	</tr>
 ';
 	}
-	
-	$result->close();
 	
 	//User with the most saves
 	$row = $db->busiest_user();
@@ -235,8 +231,8 @@ function htmlstats(){
 ';
 
 	$result = $db->plugins();
-	
-	while ($row = $result->fetch_assoc()) {
+
+	foreach($result as $row) {
 		$plugintype=PluginType($row['PluginType']);
 		echo '
 	<tr>
@@ -245,9 +241,7 @@ function htmlstats(){
 	</tr>
 ';
 	}
-	
-	$result->close();
-	
+
 ?>
 </table>
 <p/>
@@ -309,8 +303,7 @@ function OS_XHTML($result, $headersuffix) {
 </thead>
 ';
 
-	while($row = $result->fetch_assoc())
-	{
+	foreach($result as $row) {
 		echo '
 
 	<tr>
@@ -320,8 +313,6 @@ function OS_XHTML($result, $headersuffix) {
 	</tr>
 ';
 	}
-	
-	$result->close();
 }
 
 function BuildWikiHostname($lang, $site) {
